@@ -5,7 +5,7 @@
 Установка зависимостей
 
 ```
-pip install requrequirements.txt
+pip install requirements.txt
 ```
 
 
