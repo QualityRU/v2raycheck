@@ -58,7 +58,7 @@ def check_socks(url):
     socket.socket = socks.socksocket
 
     try:
-        response = requests.get('http://httpbin.org/ip', timeout=1)
+        response = requests.get('http://httpbin.org/ip', timeout=5)
         print('Прокси ответ: ', response.json())
         if response:
             write_config(url)
