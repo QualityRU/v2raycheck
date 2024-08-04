@@ -12,6 +12,7 @@ pathspec==0.12.1
 platformdirs==4.2.2
 pycodestyle==2.8.0
 pyflakes==2.4.0
+PySocks==1.7.1
 python-dotenv==1.0.1
 requests==2.32.3
 tomli==2.0.1
