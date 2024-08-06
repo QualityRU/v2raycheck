@@ -1,35 +1,38 @@
-import os
+import asyncio
+import traceback
 
-from dotenv import load_dotenv
+from colorama import Fore, init
 
-from core.json2config import (
-    check_socks,
-    get_config_v2ray,
-    get_configs_sub,
-    start_v2ray,
-    stop_v2ray,
-)
+from core.v2ray import V2RayConfig, V2RayController
 
-load_dotenv()
-
-URL_CONFIGS_SUB = os.getenv('URL_CONFIGS_SUB')
+init(autoreset=True)
 
 
-def main():
-    configs_urls = get_configs_sub(URL_CONFIGS_SUB)
+async def main():
+    config = V2RayConfig()
+    controller = V2RayController(config)
 
-    for u in configs_urls:
-        if not get_config_v2ray(u):
+    await controller.check_connection()
+    configs_urls = await controller.fetch_configs()
+
+    for url in configs_urls:
+        if not await controller.generate_config(url):
             continue
 
-        v2ray_process = start_v2ray()
-        # print('V2Ray запущен')
+        await controller.start_v2ray()
+        await asyncio.sleep(0.1)
 
-        check_socks(u)
+        if await controller.check_connection(use_proxy=True):
+            await controller.append_config(url)
 
-        stop_v2ray(v2ray_process)
-        # print('V2Ray остановлен')
+        await controller.stop_v2ray()
+
+    await asyncio.sleep(0.1)
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(Fore.RED + 'An error occurred during execution:', e)
+        print(Fore.RED + traceback.format_exc())
