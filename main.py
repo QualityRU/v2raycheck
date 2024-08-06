@@ -22,8 +22,9 @@ async def main():
         await controller.start_v2ray()
         await asyncio.sleep(0.1)
 
-        if await controller.check_connection(use_proxy=True):
-            await controller.append_config(url)
+        country = await controller.check_connection(use_proxy=True)
+        if country != False:
+            await controller.append_config(url, country)
 
         await controller.stop_v2ray()
 

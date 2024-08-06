@@ -81,11 +81,11 @@ class V2RayController:
             print(Fore.RED + f'Error generating config: {e}')
             return False
 
-    async def append_config(self, url):
+    async def append_config(self, url, country):
         """Append a configuration URL to the config check path."""
         url = url.split('#')[0]
         async with aiofiles.open(self.config.config_check_path, 'a') as file:
-            await file.write(url + '\n')
+            await file.write(f'{url}#{country}\n')
         print(Fore.YELLOW + f'Configuration URL written to file: {url}')
 
     async def check_connection(self, use_proxy=False):
@@ -116,7 +116,7 @@ class V2RayController:
                         Fore.GREEN
                         + f'{connection_type} connection response: {data.get("ip")} -  {data.get("country")}'
                     )
-                    return True
+                    return data.get('country')
         except asyncio.TimeoutError:
             print(Fore.RED + 'Timeout error')
             return False
