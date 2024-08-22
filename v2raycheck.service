@@ -1,0 +1,8 @@
+[Unit]
+Description=Запуск скрипта v2raycheck и удаление файла configs.txt
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/user/v2raycheck
+ExecStart=/bin/bash -c "/bin/rm -f configs.txt && venv/bin/python3 main.py"
+TimeoutStartSec=600

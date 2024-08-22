@@ -1,4 +1,5 @@
 import logging
+import os
 import random
 import re
 from collections import defaultdict
@@ -8,10 +9,13 @@ from aiogram import Bot, Router, types
 from aiogram.filters import Command
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            KeyboardButton, ReplyKeyboardMarkup)
+from dotenv import load_dotenv
 
-# Настройка логирования
+load_dotenv()
+
+CONFIG_CHECK_PATH = os.getenv('CONFIG_CHECK_PATH')
+
 logger = logging.getLogger(__name__)
-
 router = Router()
 
 
@@ -45,7 +49,9 @@ country_links_cache = None
 async def load_country_links(force_reload=False):
     global country_links_cache
     if country_links_cache is None or force_reload:
-        country_links_cache = await create_dictionary_from_file('configs.txt')
+        country_links_cache = await create_dictionary_from_file(
+            CONFIG_CHECK_PATH
+        )
     return country_links_cache
 
 
